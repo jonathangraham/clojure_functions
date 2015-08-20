@@ -2,7 +2,9 @@
 
 (defn my-reduce 
 	([f coll]
-		(my-reduce f (first coll) (rest coll)))
+		(if (empty? coll)
+			(f)
+			(my-reduce f (first coll) (rest coll))))
 	([f result coll]
 		(if (empty? coll)
 			result

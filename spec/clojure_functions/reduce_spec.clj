@@ -4,9 +4,7 @@
 
 (describe "test my-reduce function"
 
-	(it "result 0 for addition on empty list"
-		(should= nil (my-reduce + [])))
-
+	
 	(it "result 1 for addition on list containing element 1"
 		(should= 1 (my-reduce + [1]))
 		(should= 1 (my-reduce + 1 [])))
@@ -25,5 +23,12 @@
 		(should= #{:a :b :c} (my-reduce conj #{} [:a :b :c])))
 
 	(it "add one collection to another"
-		(should= [1 2 3 4 5 6] (my-reduce conj [1 2 3][4 5 6]))))
+		(should= [1 2 3 4 5 6] (my-reduce conj [1 2 3][4 5 6])))
+
+	(it "result 0 for addition on empty list"
+		(should= 0 (my-reduce + [])))
+
+	(it "result 0 for addition on empty list"
+		(should= 1 (my-reduce * [])))
+)
 
