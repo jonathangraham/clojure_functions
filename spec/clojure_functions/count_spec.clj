@@ -4,11 +4,11 @@
 
 (describe "test count function"
 
-	(it "result 0 for nil"
-		(should= 0 (my-count nil)))
-
 	(it "result 0 for an empty list"
 		(should= 0 (my-count '())))
+
+	(it "result 0 for nil"
+		(should= 0 (my-count nil)))
 
 	(it "result 1 for a list of one item"
 		(should= 1 (my-count '(1))))
@@ -39,6 +39,3 @@
 
 	(it "result 5 for a map with five key value pairs"
 		(should= 5 (my-count {:a 1, "b" [1 2], 3 4, :d 5, "e" {:s 10}}))))
-
-
-

@@ -1,9 +1,8 @@
-(ns clojure-functions.filter)
+(ns clojure-functions.filter
+	(:require [clojure-functions.reduce :refer :all]))
 
-(defn my-filter [function coll]
-	(loop [input coll filtered []]
-		(if (empty? input)
-			filtered
-			(recur (rest input) (if (function (first input))
-									(conj filtered (first input)) 
-									filtered)))))
+(defn my-filter [pred coll]
+		(lazy-seq (when (seq coll)
+			(if (pred (first coll))
+				(cons (first coll) (my-filter pred (rest coll))) 
+				(my-filter pred (rest coll))))))

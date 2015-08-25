@@ -1,6 +1,6 @@
-(ns clojure-functions.count)
+(ns clojure-functions.count
+	(:require [clojure-functions.reduce :refer :all]))
 
 
 (defn my-count [coll]
-	(reduce (fn [result element] (inc result)) 0 coll))
-
+	(my-reduce (fn [result _] (inc result)) 0 coll))

@@ -5,14 +5,19 @@
 
 (describe "test filter function"
 
-	(it "result empty list when filtering for zero on an empty collection"
-		(should= '() (my-filter #(zero? %) [])))
+	(it "result empty lazy sequence when filtering for zero on an empty vector"
+		(should= clojure.lang.LazySeq (class (my-filter zero? [])))
+		(should= 0 (my-count (my-filter zero? [])))
+		(should= clojure.lang.LazySeq (class (my-filter zero? '())))
+		(should= clojure.lang.LazySeq (class (my-filter zero? "")))
+		(should= clojure.lang.LazySeq (class (my-filter zero? {})))
+		(should= clojure.lang.LazySeq (class (my-filter zero? #{}))))
 
-	(it "result 0 when filtering a list for zero which conatins a zero"
-		(should= '(0) (my-filter #(zero? %) [0 1 2])))
+	; (it "result 0 when filtering a list for zero which conatins a zero"
+	; 	(should= '(0) (my-filter #(zero? %) '(0 1 2))))
 
 	(it "result even numbers when filtering for even numbers"
-		(should= '(0 2 4 6 8) (my-filter #(even? %) (range 10))))
+		(should= '(0 2 4 6 8) (my-filter even? (range 10))))
 
 	(it "filter strings"
 		(should= '("a" "b" "n" "f" "q") (my-filter #(= 1 (my-count %)) ["a" "aa" "b" "n" "f" "lisp" "clojure" "q" ""])))
