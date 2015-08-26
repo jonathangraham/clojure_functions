@@ -2,7 +2,7 @@
 	(:require [clojure-functions.map :refer :all]))
 
 (defn long-running-job [n]
-    (Thread/sleep 1000) ; wait for 3 seconds
+    (Thread/sleep 1000) ; wait for 1 seconds
     (+ n 10))
 
 (defn my-pmap 

@@ -1,18 +1,14 @@
 (ns clojure-functions.map)
 
-(defn my-map
-	([function coll]
-		(loop [input coll output []]
-		(if (empty? input)
-			output
-			(recur (rest input) (conj output (function (first input)))))))
-	([function coll1 coll2]
-		(loop [input1 coll1 input2 coll2 output []]
-		(if (empty? (or input1 input2))
-			output
-			(recur (rest input1) (rest input2) (conj output (function (first input1) (first input2)))))))
-	([function coll1 coll2 & more]
-		(loop [input1 coll1 input2 coll2 remaining more]
-			(if (zero? (count remaining))
-				(my-map function input1 input2)
-				(recur (my-map function input1 input2) (first remaining) (rest remaining))))))
+(defn my-map 
+	([f coll]
+		(lazy-seq (when (seq coll)
+				(cons (f (first coll)) (my-map f (rest coll))))))
+	([f c1 c2]
+		(lazy-seq (when (and (seq c1) (seq c2))
+				(cons (f (first c1) (first c2)) (my-map f (rest c1) (rest c2))))))
+	([f c1 c2 & more]
+		(loop [c1 c1 c2 c2 r more]
+			(if (empty? r)
+				(my-map f c1 c2)
+				(recur (my-map f c1 c2) (first r) (rest r))))))
