@@ -4,35 +4,21 @@
             [clojure-functions.map :refer :all]))
 
 (defn long-running-job 
-	([n]
+	([& args]
     	(Thread/sleep 1000)
-    	(+ n 10))
-	([n1 n2]
-    	(Thread/sleep 1000)
-    	(+ n1 n2 10)))
+    	(apply + 10 args)))
 
 (defn realize-lazy-seq 
-	([map-type f c]
-		(loop [res (map-type f c)]
-    		(when res
-       			(recur (next res)))))
-	([map-type f c1 c2]
-		(loop [res (map-type f c1 c2)]
+	([map-type f & args]
+		(loop [res (apply map-type f args)]
     		(when res
        			(recur (next res))))))
 
 (defn test-time 
-	([map-type f c]
+	([map-type f & coll]
 		(let [st (System/nanoTime)]
-			(realize-lazy-seq map-type f c)
-			(/ (- (System/nanoTime) st) 1e9)))
-	([map-type f c1 c2]
-		(let [st (System/nanoTime)]
-			(realize-lazy-seq map-type f c1 c2)
+			(apply realize-lazy-seq map-type f coll)
 			(/ (- (System/nanoTime) st) 1e9))))
-
-
-
 
 
 (describe "test my-pmap function"
@@ -57,5 +43,20 @@
 	(it "maps two vectors"
 		(should= '(4 6) (my-pmap + [1 2] [3 4])))
 
+	(it "maps two vectors"
+		(should= '(14 16) (my-pmap long-running-job [1 2] [3 4])))
+
 	(it "test time long-running job with my-pmap and two collections"
-		(should (> 1.1 (time (test-time my-pmap long-running-job [1 2 3 4][1 2 3 4]))))))
+		(should (> 1.1 (time (test-time my-pmap long-running-job [1 2 3 4][1 2 3 4])))))
+
+	(it "stops when one list completed"
+		(should= '(6 16) (my-pmap #(* 2 %1 %2) [1 2] [3 4 5 6])))
+
+	(it "maps three lists"
+		(should= '(9 12) (my-pmap + '(1 2) '(3 4) '(5 6))))
+
+	(it "maps four vectors"
+		(should= '(16 20) (my-map + [1 2] [3 4] [5 6] [7 8])))
+
+	(it "test time long-running job with my-pmap and four collections"
+		(should (> 2.1 (time (test-time my-pmap long-running-job [1 2][3 4][5 6][7 8]))))))
