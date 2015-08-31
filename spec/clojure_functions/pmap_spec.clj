@@ -38,10 +38,7 @@
 		(should (< 4.0 (test-time map long-running-job [1 2 3 4]))))
 
 	(it "test time long-running job with my-pmap"
-		(should (> 1.1 (test-time my-pmap long-running-job [1 2 3 4]))))
-
-	(it "maps two vectors"
-		(should= '(4 6) (my-pmap + [1 2] [3 4])))
+		(should (> 1.1 (time (test-time my-pmap long-running-job [1 2 3 4])))))
 
 	(it "maps two vectors"
 		(should= '(14 16) (my-pmap long-running-job [1 2] [3 4])))
@@ -56,7 +53,11 @@
 		(should= '(9 12) (my-pmap + '(1 2) '(3 4) '(5 6))))
 
 	(it "maps four vectors"
-		(should= '(16 20) (my-map + [1 2] [3 4] [5 6] [7 8])))
+		(should= '(16 20) (my-pmap + [1 2 3] [3 4 4] [5 6 4] [7 8])))
 
 	(it "test time long-running job with my-pmap and four collections"
-		(should (> 2.1 (time (test-time my-pmap long-running-job [1 2][3 4][5 6][7 8]))))))
+		(should (> 1.1 (time (test-time my-pmap long-running-job [1 2][3 4][5 6][7 8])))))
+
+	(it "maps with non-commutative functions"
+		(should= '([:a :d :g] [:b :e :h] [:c :f :i]) 
+			(apply my-map vector [[:a :b :c][:d :e :f][:g :h :i]]))))

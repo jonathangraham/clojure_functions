@@ -31,4 +31,8 @@
 		(should= '(9 12) (my-map + '(1 2) '(3 4) '(5 6))))
 
 	(it "maps four vectors"
-		(should= '(16 20) (my-map + [1 2] [3 4] [5 6] [7 8]))))
+		(should= '(16 20) (my-map + [1 2] [3 4] [5 6] [7 8])))
+
+	(it "maps with non-commutative functions"
+		(should= '([:a :d :g] [:b :e :h] [:c :f :i]) 
+			(apply my-map vector [[:a :b :c][:d :e :f][:g :h :i]]))))
