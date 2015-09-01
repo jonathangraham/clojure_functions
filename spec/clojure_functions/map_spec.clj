@@ -5,7 +5,7 @@
 
 (describe "test my-map function"
 
-	(it "result empty lazy sequence when filtering for zero on an empty vector"
+	(it "result empty lazy sequence when mapping with zero? on an empty vector"
 		(should= clojure.lang.LazySeq (class (my-map zero? [])))
 		(should= 0 (my-count (my-map zero? []))))
 
