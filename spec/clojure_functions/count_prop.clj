@@ -7,7 +7,6 @@
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop]))
 
-
 (def my-count-prop
   (prop/for-all [c colls]
     (is (= (count c) (my-count c)))))
