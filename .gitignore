@@ -11,3 +11,5 @@ pom.xml
 .lein-repl-history
 .DS_Store
 */.DS_Store
+_site/*
+.nrepl-port

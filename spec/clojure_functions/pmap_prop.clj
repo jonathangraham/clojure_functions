@@ -3,14 +3,12 @@
             [clojure-functions.pmap :refer :all]
             [clojure.test :refer :all]
             [clojure.test.check.clojure-test :refer (defspec)]
-            [clojure.test.check :as tc]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop]))
 
-
 (defn long-running-job 
     ([& args]
-        (Thread/sleep 50)
+        (Thread/sleep 250)
         (apply list args)))
 
 (defn realize-lazy-seq 
@@ -25,20 +23,10 @@
             (apply realize-lazy-seq map-type f coll)
             (/ (- (System/nanoTime) st) 1e9))))
 
+(defspec my-pmap-property-test 20
+    (prop/for-all [c (gen/not-empty (gen/vector colls))]
+        (= (apply pmap list (concat c)) (apply my-pmap list (concat c)))))
 
-(def my-pmap-property
-    (prop/for-all [c colls-more-one-element]
-        (is (= (pmap list c) (my-pmap list c)))
-        (is (= (pmap list c c) (my-pmap list c c)))
-        (is (= (pmap list c c c) (my-pmap list c c c)))
-        (is (= (pmap list c c c c c) (my-pmap list c c c c c)))))
-
-(def my-pmap-time-property
-    (prop/for-all [c colls-more-one-element]
-        (is (> (test-time map long-running-job c) (test-time my-pmap long-running-job c)))
-        (is (> (test-time map long-running-job c c) (test-time my-pmap long-running-job c c)))
-        (is (> (test-time map long-running-job c c c) (test-time my-pmap long-running-job c c c)))
-        (is (> (test-time map long-running-job c c c c c) (test-time my-pmap long-running-job c c c c c)))))
-
-(defspec my-pmap-property-test 50 my-pmap-property)
-(defspec my-pmap-time-property-test 50 my-pmap-time-property)
+(defspec my-pmap-time-property-test 20
+    (prop/for-all [c (gen/not-empty (gen/vector colls-more-one-element))]
+        (> (apply test-time map long-running-job (concat c)) (apply test-time my-pmap long-running-job (concat c)))))

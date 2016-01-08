@@ -3,7 +3,6 @@
             [clojure-functions.reduce :refer :all]
             [clojure.test :refer :all]
             [clojure.test.check.clojure-test :refer (defspec)]
-            [clojure.test.check :as tc]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop]))
 
@@ -11,9 +10,8 @@
     ([] true)
     ([a b] b))
 
-(def my-reduce-property
+(defspec my-reduce-property-test 20
     (prop/for-all [c colls v gen/any]
-        (is (= (reduce red-fn c) (my-reduce red-fn c)))
-        (is (= (reduce red-fn v c) (my-reduce red-fn v c)))))
-
-(defspec my-reduce-property-test 50 my-reduce-property)
+        (and 
+            (= (reduce red-fn c) (my-reduce red-fn c))
+            (= (reduce red-fn v c) (my-reduce red-fn v c)))))
